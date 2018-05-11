@@ -70,8 +70,8 @@ namespace App2
 
         private async void StreamSocketListener_ConnectionReceived(Windows.Networking.Sockets.StreamSocketListener sender, Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args)
         {
-            var x = 0;
-            var y = 0;
+            double x = 0;
+            double y = 0;
             using (var streamReader = new StreamReader(args.Socket.InputStream.AsStreamForRead()))
             {
                 //DataContractJsonSerializer ser = new DataContractJsonSerializer(deserializedUser.GetType());  
@@ -85,11 +85,11 @@ namespace App2
                 using (var jsonTextReader = new JsonTextReader(streamReader))
                 {
                     dynamic c = ser.Deserialize(jsonTextReader);
-                    x = c.x;
-                    y = c.y;
-                    // updateCoordinates(x, y);
-                    Console.Write(x);
-                    Console.Write(y);
+                    x = c.x * 50 ;
+                    y = c.y * 50 ;
+                   // updateCoordinates(x, y);
+                    Debug.WriteLine(x);
+                    Debug.WriteLine(y);
 
 
                 }
@@ -99,7 +99,7 @@ namespace App2
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => this.updateCoordinates(x, y));
 
             // Echo the request back as the response.
-            sender.Dispose();
+            //sender.Dispose();
 
            // await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => this.serverListBox.Items.Add("server closed its socket"));
         }
