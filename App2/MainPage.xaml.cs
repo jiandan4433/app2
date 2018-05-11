@@ -39,8 +39,8 @@ namespace App2
         {
 
             this.InitializeComponent();
-            img.SetValue(Canvas.LeftProperty, 10);
-            img.SetValue(Canvas.TopProperty, 10);
+            img.SetValue(Canvas.LeftProperty, 0);
+            img.SetValue(Canvas.TopProperty, 0);
 
             this.StartServer();
 
@@ -72,31 +72,23 @@ namespace App2
         {
             double x = 0;
             double y = 0;
-            using (var streamReader = new StreamReader(args.Socket.InputStream.AsStreamForRead()))
-            {
-                //DataContractJsonSerializer ser = new DataContractJsonSerializer(deserializedUser.GetType());  
-                //deserializedUser = ser.ReadObject(ms) as Coord; 
-
-                ////var coords = new (streamReader).Deserialize<Dictionary<string, Double>>;
-                // x = coords["x"];
-                // y = coords["y"];
+                var streamReader = new StreamReader(args.Socket.InputStream.AsStreamForRead());
                 var ser = new JsonSerializer();
-                Console.WriteLine(streamReader);
-                using (var jsonTextReader = new JsonTextReader(streamReader))
-                {
-                    dynamic c = ser.Deserialize(jsonTextReader);
-                    x = c.x * 50 ;
-                    y = c.y * 50 ;
-                   // updateCoordinates(x, y);
-                    Debug.WriteLine(x);
-                    Debug.WriteLine(y);
-
-
-                }
-
+            while (true) {
+                var jsonTextReader = new JsonTextReader(streamReader);
+                dynamic c = ser.Deserialize(jsonTextReader);
+                x = c.x * 50;
+                y = c.y * 50;
+                // updateCoordinates(x, y);
+                Debug.WriteLine(x);
+                Debug.WriteLine(y);
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => this.updateCoordinates(x, y));
             }
+                    
+                
+        
 
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => this.updateCoordinates(x, y));
+            //await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => this.updateCoordinates(x, y));
 
             // Echo the request back as the response.
             //sender.Dispose();
